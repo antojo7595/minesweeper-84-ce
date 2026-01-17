@@ -5,11 +5,18 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/ce-programming/toolchain:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build with CEdev
-        uses: CE-Programming/gh-action-build@v5
+      - name: Build
+        run: |
+          make
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
-          artifact-name: MyMinesweeper
+          name: Minesweeper-84-CE
+          path: bin/*.8xp
