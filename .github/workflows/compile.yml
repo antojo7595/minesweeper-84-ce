@@ -1,18 +1,30 @@
-name: Build .8xp
+name: Build Minesweeper (Nuclear Option)
 
 on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: ghcr.io/ce-programming/toolchain:latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Build
+      - name: Install CE Toolchain (Manual)
         run: |
+          # Bajar la última versión del toolchain directamente
+          curl -sL https://github.com/CE-Programming/toolchain/releases/download/v11.1/CEdev-Linux.tar.gz -o toolchain.tar.gz
+          # Descomprimir
+          tar -xzf toolchain.tar.gz
+          # Mover a un sitio decente
+          sudo mv CEdev /opt/CEdev
+          # Dar permisos por si acaso
+          sudo chmod +x /opt/CEdev/bin/*
+
+      - name: Compile
+        run: |
+          # Añadir el toolchain al PATH solo para este paso
+          export PATH="/opt/CEdev/bin:$PATH"
+          # Compilar
           make
 
       - name: Upload artifact
